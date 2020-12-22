@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, Platform } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import * as Sharing from 'expo-sharing'
+import uploadToAnonymousFilesAsync from 'anonymous-files'
 
 export default function App() {
   const [selectedImage, setSelectedImage] = useState(null)
@@ -18,13 +19,20 @@ export default function App() {
     const pickerResult = await ImagePicker.launchImageLibraryAsync()
     
     //Check if image selected
-    if(pickerResult.cancelled === true) return
-    setSelectedImage({localURI: pickerResult.uri })
+    if(pickerResult.cancelled === true) return    
+
+    //Customize remoteURI for web platform, otherwise use localURI
+    if(Platform.OS === 'web'){
+      const remoteURI = await uploadToAnonymousFilesAsync(pickerResult.uri)
+      setSelectedImage({localURI: pickerResult.uri,  remoteURI})
+    } else {
+      setSelectedImage({localURI: pickerResult.uri, remoteURI: null })
+    }
   }
 
   const openShareDialogAsync = async () => {
     if(!(await Sharing.isAvailableAsync())){
-      alert(`Sorry. Sharing is not yet available on your platform. Stay tuned!`)
+      alert(`Share your image with this link: ${selectedImage.remoteURI}`)
       return
     }
 
