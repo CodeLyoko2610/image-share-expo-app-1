@@ -63,7 +63,7 @@ export default function App() {
   return (
     <View style={styles.container}>   
         <Image source={{uri: "https://i.imgur.com/TkIrScD.png"}} style={styles.logo}/> 
-       <Text style={styles.instruction}>To share a photo from your phone with a friend, just press the button below!</Text>  
+       <Text style={styles.instruction}>Welcome! Start sharing by clicking the button!</Text>  
 
        <TouchableOpacity
         onPress={openImagePickerAsync}
