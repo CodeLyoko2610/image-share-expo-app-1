@@ -1,18 +1,36 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 
 export default function App() {
+  const [selectedImage, setSelectedImage] = useState(null)
+
   const openImagePickerAsync = async () => {
     const permission = await ImagePicker.requestCameraPermissionsAsync()
 
+    //Check permission
     if(permission.granted === false){
       alert('Please allow access to your camera roll to use the app.')
       return
     }
 
-    const imagePicked = await ImagePicker.launchImageLibraryAsync()
-    console.log(imagePicked)
+    const pickerResult = await ImagePicker.launchImageLibraryAsync()
+    
+    //Check if image selected
+    if(pickerResult.cancelled === true) return
+    setSelectedImage({localURI: pickerResult.uri })
+  }
+
+  //Display selected image
+  if(selectedImage !== null){
+    return (
+      <View style={styles.container}>
+        <Image
+          source={{uri: selectedImage.localURI}}
+          style={styles.thumbnail}
+        />
+      </View>
+    )
   }
 
   return (
@@ -55,5 +73,10 @@ const styles = StyleSheet.create({
     backgroundColor: "blue",
     padding: 20,
     borderRadius: 5,
+  },
+  thumbnail: {
+    width: 300,
+    height: 300,
+    resizeMode: 'contain'
   }
 })
