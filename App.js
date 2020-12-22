@@ -24,11 +24,17 @@ export default function App() {
   //Display selected image
   if(selectedImage !== null){
     return (
-      <View style={styles.container}>
+      <View style={styles.container}>        
         <Image
           source={{uri: selectedImage.localURI}}
           style={styles.thumbnail}
-        />
+        />     
+        <TouchableOpacity
+          onPress={() => setSelectedImage(null)}
+          style={styles.buttonDelete}        
+        >
+          <Text style={styles.buttonText}>x</Text>
+        </TouchableOpacity>  
       </View>
     )
   }
@@ -73,6 +79,16 @@ const styles = StyleSheet.create({
     backgroundColor: "blue",
     padding: 20,
     borderRadius: 5,
+    margin: 10,
+  },
+  buttonDelete: {
+    backgroundColor: "red",
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    margin: 10,
   },
   thumbnail: {
     width: 300,
