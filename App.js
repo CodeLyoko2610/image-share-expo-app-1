@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
+import * as Sharing from 'expo-sharing'
 
 export default function App() {
   const [selectedImage, setSelectedImage] = useState(null)
@@ -21,6 +22,15 @@ export default function App() {
     setSelectedImage({localURI: pickerResult.uri })
   }
 
+  const openShareDialogAsync = async () => {
+    if(!(await Sharing.isAvailableAsync())){
+      alert(`Sorry. Sharing is not yet available on your platform. Stay tuned!`)
+      return
+    }
+
+    await Sharing.shareAsync(selectedImage.localURI)
+  }
+
   //Display selected image
   if(selectedImage !== null){
     return (
@@ -35,6 +45,9 @@ export default function App() {
         >
           <Text style={styles.buttonText}>x</Text>
         </TouchableOpacity>  
+        <TouchableOpacity onPress={openShareDialogAsync} style={styles.button}>
+          <Text style={styles.buttonText}>Share this photo</Text>
+        </TouchableOpacity>        
       </View>
     )
   }
